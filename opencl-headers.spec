@@ -5,12 +5,13 @@
 #
 Name     : opencl-headers
 Version  : 2023.04.17
-Release  : 6
+Release  : 7
 URL      : https://github.com/KhronosGroup/OpenCL-Headers/archive/refs/tags/v2023.04.17.tar.gz
 Source0  : https://github.com/KhronosGroup/OpenCL-Headers/archive/refs/tags/v2023.04.17.tar.gz
 Summary  : Khronos OpenCL Headers
 Group    : Development/Tools
 License  : Apache-2.0
+Requires: opencl-headers-data = %{version}-%{release}
 Requires: opencl-headers-license = %{version}-%{release}
 BuildRequires : buildreq-cmake
 BuildRequires : python3-dev
@@ -22,9 +23,18 @@ BuildRequires : python3-dev
 # OpenCL<sup>TM</sup> API Headers
 This repository contains C language headers for the OpenCL API.
 
+%package data
+Summary: data components for the opencl-headers package.
+Group: Data
+
+%description data
+data components for the opencl-headers package.
+
+
 %package dev
 Summary: dev components for the opencl-headers package.
 Group: Development
+Requires: opencl-headers-data = %{version}-%{release}
 Provides: opencl-headers-devel = %{version}-%{release}
 Requires: opencl-headers = %{version}-%{release}
 
@@ -49,7 +59,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1686067069
+export SOURCE_DATE_EPOCH=1686068355
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -61,24 +71,24 @@ export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -
 export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 %cmake ..
-make  %{?_smp_mflags}  || :
+make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1686067069
+export SOURCE_DATE_EPOCH=1686068355
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/opencl-headers
 cp %{_builddir}/OpenCL-Headers-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/opencl-headers/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
 pushd clr-build
-:
+%make_install
 popd
-## install_append content
-mkdir -p %{buildroot}/usr/include/CL
-install -m644 CL/* %{buildroot}/usr/include/CL
-## install_append end
 
 %files
 %defattr(-,root,root,-)
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/cmake/*
 
 %files dev
 %defattr(-,root,root,-)
@@ -99,6 +109,7 @@ install -m644 CL/* %{buildroot}/usr/include/CL
 /usr/include/CL/cl_va_api_media_sharing_intel.h
 /usr/include/CL/cl_version.h
 /usr/include/CL/opencl.h
+/usr/lib64/pkgconfig/OpenCL-Headers.pc
 
 %files license
 %defattr(0644,root,root,0755)
