@@ -7,7 +7,7 @@
 #
 Name     : opencl-headers
 Version  : 2024.05.08
-Release  : 9
+Release  : 10
 URL      : https://github.com/KhronosGroup/OpenCL-Headers/archive/v2024.05.08/OpenCL-Headers-2024.05.08.tar.gz
 Source0  : https://github.com/KhronosGroup/OpenCL-Headers/archive/v2024.05.08/OpenCL-Headers-2024.05.08.tar.gz
 Summary  : Khronos OpenCL Headers
